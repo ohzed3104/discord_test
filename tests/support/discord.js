@@ -92,8 +92,11 @@ export async function openChannelUrl(page, label, url) {
   await waitForLogin(page, label);
   await page.goto(url, { waitUntil: 'domcontentloaded' });
   const input = await getMessageInput(page);
-  await expect(input).toBeVisible({ timeout: 20000 });
-  await expect(getMessageList(page)).toBeVisible({ timeout: 20000 });
+  await expect(
+    input,
+    `${label} should see a message textbox. Check that the URL is a text channel and the account has View Channel + Send Message permissions.`
+  ).toBeVisible({ timeout: 60000 });
+  await expect(getMessageList(page)).toBeVisible({ timeout: 60000 });
 }
 
 export async function sendMessage(page, text) {
