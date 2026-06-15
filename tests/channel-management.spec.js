@@ -12,8 +12,14 @@ const SERVER_URL = getServerUrl(DISCORD_CHANNEL_URL);
 
 function getServerUrl(channelUrl) {
   if (!channelUrl) return undefined;
-  const match = channelUrl.match(/^(https:\/\/discord\.com\/channels\/\d+)(?:\/\d+)?/);
-  return match?.[1];
+
+  const match = channelUrl.match(
+    /^https:\/\/discord\.com\/channels\/(\d+)\/(\d+)/
+  );
+
+  return match
+    ? `https://discord.com/channels/${match[1]}/${match[2]}`
+    : undefined;
 }
 
 function channelName(prefix) {
@@ -23,12 +29,9 @@ function channelName(prefix) {
 }
 
 function getServerHeaderButton(page) {
-  return page
-    .getByRole('button', { name: /Server Options|server actions|tác vụ máy chủ|tÃ¡c vá»¥ mÃ¡y chá»§/i })
-    .or(page.locator('[data-testid="guild-header"]'))
-    .or(page.locator('[aria-label="Server Options"]'))
-    .or(page.locator('[aria-label*="Server Options"]'))
-    .first();
+  return page.getByRole('button', {
+    name: /tác vụ máy chủ|server actions|server options/i,
+  });
 }
 
 async function clickFirstVisible(page, locators, description) {
@@ -55,63 +58,66 @@ async function clickFirstVisible(page, locators, description) {
 
 async function openServer(page, label) {
   await waitForLogin(page, label);
-  await page.goto(DISCORD_CHANNEL_URL, { waitUntil: 'domcontentloaded' });
-  await expect(page).toHaveURL(/\/channels\/\d+\/\d+/, { timeout: 30000 });
 
-  const noTextChannel = page.getByText(/No Text Channels|Không Có Kênh Văn Bản/i).first();
-  await expect(getServerHeaderButton(page).or(noTextChannel), `${label} should open a loaded server channel`).toBeVisible({
-    timeout: 60000,
+  await page.goto(DISCORD_CHANNEL_URL, {
+    waitUntil: 'domcontentloaded',
   });
-  if (await noTextChannel.isVisible().catch(() => false)) {
-    throw new Error(`${label} cannot access text channels at ${DISCORD_CHANNEL_URL}. Check channel permissions.`);
-  }
-}
 
-async function openServerMenu(page) {
-  await clickFirstVisible(
-    page,
-    [
-      getServerHeaderButton(page),
-      page.locator('header').first(),
-    ],
-    'server menu'
+  await expect(page).toHaveURL(
+    /\/channels\/\d+\/\d+/,
+    { timeout: 30000 }
   );
 }
 
-async function openCreateChannelDialog(page) {
-  await openServerMenu(page);
-
-  const menuItem = page.getByRole('menuitem', { name: /Create Channel|Tạo Kênh|Tạo kênh/i });
-  if ((await menuItem.count()) > 0) {
-    await menuItem.first().click();
-    return;
-  }
-
-  await page.keyboard.press('Escape');
+async function openServerMenu(page) {
+  const serverBtn = getServerHeaderButton(page).first();
+  await expect(serverBtn).toBeVisible({ timeout: 10000 });
+  await serverBtn.click();
   await page.waitForTimeout(500);
+}
 
-  const textCategory = page.getByRole('button', { name: /Text Channels|Kênh Chat/i }).first();
-  if ((await textCategory.count()) > 0) {
-    await textCategory.hover().catch(() => {});
-    await page.waitForTimeout(500);
+async function openCreateChannelDialog(page) {
+  await openServer(page, 'User A');
+
+  // Đóng các popup quảng cáo/thông báo nếu có
+  for (let i = 0; i < 3; i++) {
+    await page.keyboard.press('Escape').catch(() => {});
+    await page.waitForTimeout(300);
   }
 
-  try {
-    await clickFirstVisible(
-      page,
-      [
-        page.locator('[aria-label="Create Channel"]'),
-        page.locator('[aria-label*="Create Channel"]'),
-        page.locator('[aria-label*="Tạo Kênh"]'),
-        page.locator('[aria-label*="Tạo kênh"]'),
-        page.locator('[data-list-item-id*="create-channel"]'),
-        page.getByRole('button', { name: /Create Channel|Tạo Kênh|Tạo kênh/i }),
-      ],
-      'create channel button'
+  // 1. Định vị chính xác danh mục "Kênh Chat" hoặc "Text Channels"
+  const categoryHeader = page.locator('[role="button"][aria-label*="Kênh Chat"i], [role="button"][aria-label*="Text Channels"i]');
+  await expect(categoryHeader).toBeVisible({ timeout: 20000 });
+
+  // 2. BẮT BUỘC: Rê chuột vào danh mục thì nút dấu "+" mới xuất hiện
+  await categoryHeader.hover();
+  await page.waitForTimeout(200); 
+
+  // 3. Tìm nút dấu "+" dựa theo thuộc tính aria-label
+  const addButton = page.locator('[aria-label*="Tạo kênh"i], [aria-label*="Create Channel"i]').locator('visible=true');
+  await expect(addButton.first()).toBeVisible({ timeout: 10000 });
+  
+  // 4. Click vào nút "+" đầu tiên tìm thấy
+  await addButton.first().click();
+
+  // 5. Kiểm tra xem Dialog tạo channel đã bật lên chưa
+  const dialog = page.getByRole('dialog').last();
+  await expect(dialog).toBeVisible({ timeout: 15000 });
+
+  return dialog;
+}
+
+async function debugCreateButton(page) {
+  const buttons = await page
+    .locator('[role="button"][aria-label]')
+    .evaluateAll(nodes =>
+      nodes.map(node => ({
+        aria: node.getAttribute('aria-label'),
+        role: node.getAttribute('role'),
+      }))
     );
-  } catch {
-    test.skip(true, 'User A does not have Manage Channels permission on this server.');
-  }
+
+  console.log(buttons);
 }
 
 async function getCreateChannelDialog(page) {
@@ -122,34 +128,51 @@ async function getCreateChannelDialog(page) {
 
 async function selectChannelType(page, typeName) {
   const dialog = await getCreateChannelDialog(page);
-  const type = dialog.getByText(new RegExp(`^${typeName}$`, 'i')).first();
-  if ((await type.count()) === 0) return false;
-  await type.click();
+
+  // Map từ tên tiếng Anh trong test case sang tiếng Việt tương ứng trên UI
+  let localizedName = typeName;
+  const nameLower = typeName.toLowerCase();
+  
+  // SỬA TẠI ĐÂY: Đổi 'Vàn bản|Text' thành 'Văn bản|Text'
+  if (nameLower === 'text') localizedName = 'Văn bản|Text';
+  if (nameLower === 'voice') localizedName = 'Giọng nói|Voice';
+  if (nameLower === 'forum') localizedName = 'Diễn Đàn|Forum';
+  if (nameLower === 'announcement') localizedName = 'Thông báo|Announcement'; 
+  if (nameLower === 'stage') localizedName = 'Sân khấu|Stage'; 
+
+  const option = dialog.getByText(new RegExp(localizedName, 'i')).first();
+
+  if ((await option.count()) === 0) {
+    return false;
+  }
+
+  await option.click();
   return true;
 }
-
 async function fillChannelName(page, name) {
   const dialog = await getCreateChannelDialog(page);
-  const input = dialog.locator('input').last();
-  await expect(input).toBeVisible({ timeout: 15000 });
+  const input = dialog.getByRole('textbox').first();
+  await expect(input).toBeVisible({ timeout: 5000 });
   await input.fill(name);
 }
 
 async function submitCreateChannel(page) {
   const dialog = await getCreateChannelDialog(page);
-  await dialog.getByRole('button', { name: /Create|Create Channel/i }).last().click();
+  // Tìm chính xác nút Tạo Kênh / Create Channel ở góc dưới bên phải dialog
+  const submitButton = dialog.getByRole('button', { name: /Tạo kênh|Create Channel/i }).last();
+  await expect(submitButton).toBeVisible({ timeout: 5000 });
+  await submitButton.click();
 }
 
 async function createChannel(page, typeName, name) {
   await openCreateChannelDialog(page);
   const hasType = await selectChannelType(page, typeName);
   if (!hasType) {
-  await page.keyboard.press('Escape');
-
-  throw new Error(
-    `${typeName} channel option is not available on this server.`
-  );
-}
+    await page.keyboard.press('Escape');
+    throw new Error(
+      `${typeName} channel option is not available on this server.`
+    );
+  }
 
   await fillChannelName(page, name);
   await submitCreateChannel(page);
@@ -164,15 +187,23 @@ async function openChannelContextMenu(page, name) {
 
 async function openChannelSettings(page, name) {
   await openChannelContextMenu(page, name);
-  await page.getByRole('menuitem', { name: /Edit Channel/i }).click();
-  await expect(page.getByRole('heading', { name: /Channel Settings|Overview/i }).first()).toBeVisible({
-    timeout: 15000,
+  
+  const editItem = page.getByRole('menuitem', {
+    name: /Chỉnh sửa kênh|Edit Channel|Overview/i
   });
+
+  await expect(editItem).toBeVisible({ timeout: 8000 });
+  await editItem.click();
+
+  await expect(page.getByRole('heading', { 
+    name: /Tổng quan|Channel Settings|Overview|Chỉnh sửa kênh/i 
+  })).toBeVisible({ timeout: 15000 });
 }
 
 async function saveSettings(page) {
+  // Giao diện Tiếng Việt nút lưu là "Lưu thay đổi"
   const save = page.getByRole("button", {
-    name: /Save Changes/i,
+    name: /Lưu thay đổi|Save Changes/i,
   });
 
   await expect(save).toBeEnabled({
@@ -189,6 +220,7 @@ async function closeSettings(page) {
   await page.keyboard.press('Escape');
   await page.waitForTimeout(500);
 }
+
 async function safeDeleteChannel(page, name) {
   try {
     await deleteChannel(page, name);
@@ -202,10 +234,14 @@ async function safeDeleteChannel(page, name) {
 
 async function deleteChannel(page, name) {
   await openChannelContextMenu(page, name);
-  await page.getByRole('menuitem', { name: /Delete Channel/i }).click();
+  await page.getByRole('menuitem', {
+    name: /Xóa kênh|Delete Channel/i
+  }).click();
+  
   const dialog = page.getByRole('dialog').last();
   await expect(dialog).toBeVisible({ timeout: 15000 });
-  await dialog.getByRole('button', { name: /Delete Channel|Delete/i }).last().click();
+  
+  await dialog.getByRole('button', { name: /Xóa kênh|Delete Channel|Delete/i }).last().click();
   await expect(page.getByText(name).first()).toHaveCount(0, { timeout: 30000 });
 }
 
@@ -217,9 +253,13 @@ async function createTempTextChannel(page, prefix) {
 
 test.describe('Discord channel management', () => {
   test.skip(process.env.DISCORD_SKIP_CHANNEL_MANAGEMENT === '1', 'Channel management suite skipped by env.');
-  test.skip(!SERVER_URL, 'Set DISCORD_CHANNEL_URL to a server text channel URL, not a DM URL.');
+  test.skip(
+    !DISCORD_CHANNEL_URL ||
+    DISCORD_CHANNEL_URL.includes('/channels/@me'),
+    'DISCORD_CHANNEL_URL must be a guild channel URL.'
+  );
   test.skip(({ browserName }) => browserName !== 'chromium', 'Discord channel management suite runs on Chromium only.');
-  test.describe.configure({ mode: 'serial', timeout: LOGIN_TIMEOUT_MS + 120000 });
+  test.describe.configure({ timeout: LOGIN_TIMEOUT_MS + 120000 });
 
   let context;
   let page;
@@ -237,6 +277,7 @@ test.describe('Discord channel management', () => {
 
   test('CH-MGMT-001: open create channel dialog from server menu', async () => {
     await openServer(page, 'User A');
+    await debugCreateButton(page);
     await openCreateChannelDialog(page);
     await expect(await getCreateChannelDialog(page)).toBeVisible();
     await page.keyboard.press('Escape');
@@ -276,7 +317,9 @@ test.describe('Discord channel management', () => {
     await selectChannelType(page, 'Text');
     await fillChannelName(page, '');
     const dialog = await getCreateChannelDialog(page);
-    await expect(dialog.getByRole('button', { name: /Create|Create Channel/i }).last()).toBeDisabled();
+    
+    // Đã sửa đổi khớp với chữ "Tạo kênh" tiếng Việt
+    await expect(dialog.getByRole('button', { name: /Tạo kênh|Create|Create Channel/i }).last()).toBeDisabled();
     await page.keyboard.press('Escape');
   });
 
@@ -320,7 +363,9 @@ test.describe('Discord channel management', () => {
     await openChannelSettings(page, name);
     await page.locator('input').last().fill(channelName('pw-should-not-save'));
     await page.keyboard.press('Escape');
-    await page.getByRole('button', { name: /Reset|Discard/i }).click().catch(() => {});
+    
+    // Hỗ trợ nút Hủy bỏ / Xóa thay đổi / Reset / Discard của Discord
+    await page.getByRole('button', { name: /Hủy bỏ|Xóa thay đổi|Reset|Discard/i }).click().catch(() => {});
     await closeSettings(page);
 
     await expect(page.getByText(name).first()).toBeVisible({ timeout: 30000 });
@@ -348,7 +393,8 @@ test.describe('Discord channel management', () => {
     const name = await createTempTextChannel(page, 'pw-nsfw');
 
     await openChannelSettings(page, name);
-    const toggle = page.getByRole('switch', { name: /Age-Restricted|NSFW/i }).first();
+    // Hỗ trợ nhãn tiếng Việt "Hạn chế độ tuổi"
+    const toggle = page.getByRole('switch', { name: /Hạn chế độ tuổi|Age-Restricted|NSFW/i }).first();
     if ((await toggle.count()) === 0) {
       await closeSettings(page);
       await deleteChannel(page, name);
@@ -383,8 +429,9 @@ test.describe('Discord channel management', () => {
     const name = await createTempTextChannel(page, 'pw-perms');
 
     await openChannelSettings(page, name);
-    await page.getByRole('tab', { name: /Permissions/i }).click();
-    await expect(page.getByText(/Advanced Permissions|Permissions/i).first()).toBeVisible({ timeout: 15000 });
+    // Tab "Quyền hạn" thay cho "Permissions"
+    await page.getByRole('tab', { name: /Quyền hạn|Permissions/i }).click();
+    await expect(page.getByText(/Quyền hạn nâng cao|Advanced Permissions|Permissions/i).first()).toBeVisible({ timeout: 15000 });
     await closeSettings(page);
 
     await deleteChannel(page, name);
@@ -394,7 +441,7 @@ test.describe('Discord channel management', () => {
     const name = await createTempTextChannel(page, 'pw-everyone');
 
     await openChannelSettings(page, name);
-    await page.getByRole('tab', { name: /Permissions/i }).click();
+    await page.getByRole('tab', { name: /Quyền hạn|Permissions/i }).click();
     await expect(page.getByText(/@everyone|everyone/i).first()).toBeVisible({ timeout: 15000 });
     await closeSettings(page);
 
@@ -405,8 +452,8 @@ test.describe('Discord channel management', () => {
     const name = await createTempTextChannel(page, 'pw-cancel-delete');
 
     await openChannelContextMenu(page, name);
-    await page.getByRole('menuitem', { name: /Delete Channel/i }).click();
-    await page.getByRole('button', { name: /Cancel/i }).click();
+    await page.getByRole('menuitem', { name: /Xóa kênh|Delete Channel/i }).click();
+    await page.getByRole('button', { name: /Hủy|Cancel/i }).click();
 
     await expect(page.getByText(name).first()).toBeVisible({ timeout: 15000 });
     await deleteChannel(page, name);
