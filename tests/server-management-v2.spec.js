@@ -98,6 +98,13 @@ async function closeDialog(page) {
   await waitForStep(page);
 }
 
+async function dismissTransientUi(page) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(500);
+  }
+}
+
 async function openDiscord(page, label) {
   await waitForLogin(page, label);
   if (DISCORD_CHANNEL_URL) {
@@ -399,17 +406,18 @@ test.describe('Discord server management v2', () => {
     }
   }
 
-  test.beforeAll(async ({ browser }, testInfo) => {
+  test.beforeEach(async ({ browser }, testInfo) => {
     testInfo.setTimeout(LOGIN_TIMEOUT_MS + 180000);
     contextOwner = await browser.newContext();
     pageOwner = await contextOwner.newPage();
     await openDiscord(pageOwner, 'User A');
   });
 
-  test.afterAll(async ({}, testInfo) => {
+  test.afterEach(async ({}, testInfo) => {
     testInfo.setTimeout(LOGIN_TIMEOUT_MS + 180000);
     for (const name of Array.from(createdServers).reverse()) {
       try {
+        await dismissTransientUi(pageOwner);
         await deleteServer(pageOwner, name);
         untrackServer(name);
       } catch {
@@ -417,6 +425,32 @@ test.describe('Discord server management v2', () => {
       }
     }
     await contextOwner?.close();
+    contextOwner = undefined;
+    pageOwner = undefined;
+  });
+
+  test.afterAll(async ({ browser }, testInfo) => {
+    if (createdServers.length === 0) {
+      return;
+    }
+
+    testInfo.setTimeout(LOGIN_TIMEOUT_MS + 180000);
+    const cleanupContext = await browser.newContext();
+    const cleanupPage = await cleanupContext.newPage();
+    try {
+      await openDiscord(cleanupPage, 'User A');
+      for (const name of Array.from(createdServers).reverse()) {
+        try {
+          await dismissTransientUi(cleanupPage);
+          await deleteServer(cleanupPage, name);
+          untrackServer(name);
+        } catch {
+          // Best-effort fallback cleanup for servers left by failed tests.
+        }
+      }
+    } finally {
+      await cleanupContext.close();
+    }
   });
 
   test('SV01 - Tạo server với tên hợp lệ', async () => {
