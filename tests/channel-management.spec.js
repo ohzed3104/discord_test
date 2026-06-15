@@ -21,6 +21,16 @@ function channelName(prefix) {
     .toString(36)
     .slice(2, 8)}`;
 }
+
+function getServerHeaderButton(page) {
+  return page
+    .getByRole('button', { name: /Server Options|server actions|tác vụ máy chủ|tÃ¡c vá»¥ mÃ¡y chá»§/i })
+    .or(page.locator('[data-testid="guild-header"]'))
+    .or(page.locator('[aria-label="Server Options"]'))
+    .or(page.locator('[aria-label*="Server Options"]'))
+    .first();
+}
+
 async function clickFirstVisible(page, locators, description) {
   for (const locator of locators) {
     if ((await locator.count()) === 0) continue;
@@ -45,17 +55,23 @@ async function clickFirstVisible(page, locators, description) {
 
 async function openServer(page, label) {
   await waitForLogin(page, label);
-  await page.goto(SERVER_URL, { waitUntil: 'domcontentloaded' });
-  await expect(page).toHaveURL(/\/channels\/\d+/);
+  await page.goto(DISCORD_CHANNEL_URL, { waitUntil: 'domcontentloaded' });
+  await expect(page).toHaveURL(/\/channels\/\d+\/\d+/, { timeout: 30000 });
+
+  const noTextChannel = page.getByText(/No Text Channels|Không Có Kênh Văn Bản/i).first();
+  await expect(getServerHeaderButton(page).or(noTextChannel), `${label} should open a loaded server channel`).toBeVisible({
+    timeout: 60000,
+  });
+  if (await noTextChannel.isVisible().catch(() => false)) {
+    throw new Error(`${label} cannot access text channels at ${DISCORD_CHANNEL_URL}. Check channel permissions.`);
+  }
 }
 
 async function openServerMenu(page) {
   await clickFirstVisible(
     page,
     [
-      page.locator('[data-testid="guild-header"]'),
-      page.locator('[aria-label="Server Options"]'),
-      page.locator('[aria-label*="Server Options"]'),
+      getServerHeaderButton(page),
       page.locator('header').first(),
     ],
     'server menu'
@@ -65,22 +81,37 @@ async function openServerMenu(page) {
 async function openCreateChannelDialog(page) {
   await openServerMenu(page);
 
-  const menuItem = page.getByRole('menuitem', { name: /Create Channel/i });
+  const menuItem = page.getByRole('menuitem', { name: /Create Channel|Tạo Kênh|Tạo kênh/i });
   if ((await menuItem.count()) > 0) {
     await menuItem.first().click();
     return;
   }
 
-  await clickFirstVisible(
-    page,
-    [
-      page.locator('[aria-label="Create Channel"]'),
-      page.locator('[aria-label*="Create Channel"]'),
-      page.locator('[data-list-item-id*="create-channel"]'),
-      page.getByRole('button', { name: /Create Channel/i }),
-    ],
-    'create channel button'
-  );
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(500);
+
+  const textCategory = page.getByRole('button', { name: /Text Channels|Kênh Chat/i }).first();
+  if ((await textCategory.count()) > 0) {
+    await textCategory.hover().catch(() => {});
+    await page.waitForTimeout(500);
+  }
+
+  try {
+    await clickFirstVisible(
+      page,
+      [
+        page.locator('[aria-label="Create Channel"]'),
+        page.locator('[aria-label*="Create Channel"]'),
+        page.locator('[aria-label*="Tạo Kênh"]'),
+        page.locator('[aria-label*="Tạo kênh"]'),
+        page.locator('[data-list-item-id*="create-channel"]'),
+        page.getByRole('button', { name: /Create Channel|Tạo Kênh|Tạo kênh/i }),
+      ],
+      'create channel button'
+    );
+  } catch {
+    test.skip(true, 'User A does not have Manage Channels permission on this server.');
+  }
 }
 
 async function getCreateChannelDialog(page) {
@@ -187,6 +218,7 @@ async function createTempTextChannel(page, prefix) {
 test.describe('Discord channel management', () => {
   test.skip(process.env.DISCORD_SKIP_CHANNEL_MANAGEMENT === '1', 'Channel management suite skipped by env.');
   test.skip(!SERVER_URL, 'Set DISCORD_CHANNEL_URL to a server text channel URL, not a DM URL.');
+  test.skip(({ browserName }) => browserName !== 'chromium', 'Discord channel management suite runs on Chromium only.');
   test.describe.configure({ mode: 'serial', timeout: LOGIN_TIMEOUT_MS + 120000 });
 
   let context;

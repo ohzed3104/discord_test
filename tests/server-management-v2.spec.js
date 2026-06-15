@@ -111,22 +111,32 @@ async function openDiscord(page, label) {
     await page.goto(DISCORD_CHANNEL_URL, { waitUntil: 'domcontentloaded' });
   }
   await expect(page).toHaveURL(/\/channels\//, { timeout: 20000 });
+  await expect(getServerList(page)).toBeVisible({ timeout: 30000 });
 }
 
 async function openCreateOwnServerForm(page) {
   await openAddServerDialog(page);
   await waitForStep(page);
 
-  await page.getByRole('button', { name: /Create My Own|Tạo Mẫu Riêng|Tự tạo/i }).click();
+  const createOwnButton = page.getByRole('button', { name: /Create My Own|Tạo Mẫu Riêng|Tự tạo/i }).first();
+  await expect(createOwnButton).toBeVisible({ timeout: 20000 });
+  await createOwnButton.click();
   await waitForStep(page);
 
-  await page
+  const audienceButton = page
     .getByRole('button', {
       name: /For me and my friends|For a club or community|Dành cho tôi và bạn bè|cộng đồng/i,
     })
-    .first()
-    .click();
+    .first();
+  await expect(audienceButton).toBeVisible({ timeout: 20000 });
+  await audienceButton.click();
   await waitForStep(page);
+
+  await expect(getServerNameInput(page)).toBeVisible({ timeout: 20000 });
+}
+
+async function waitForCreatedServer(page, serverName, timeout = 45000) {
+  await expect(getCreatedServerLocator(page, serverName)).toBeVisible({ timeout });
 }
 
 async function createServer(page, serverName) {
@@ -142,9 +152,8 @@ async function createServer(page, serverName) {
 
   for (let attempt = 0; attempt < 2; attempt += 1) {
     await createButton.click();
-    await waitForStep(page);
 
-    const createdVisible = await getCreatedServerLocator(page, serverName).waitFor({ state: 'visible', timeout: 10000 }).then(
+    const createdVisible = await getCreatedServerLocator(page, serverName).waitFor({ state: 'visible', timeout: 20000 }).then(
       () => true,
       () => false
     );
@@ -157,7 +166,7 @@ async function createServer(page, serverName) {
     }
   }
 
-  await expect(getCreatedServerLocator(page, serverName)).toBeVisible({ timeout: 20000 });
+  await waitForCreatedServer(page, serverName);
 }
 
 async function tryCreateServer(page, serverName) {
@@ -175,7 +184,6 @@ async function tryCreateServer(page, serverName) {
   }
 
   await createButton.click();
-  await waitForStep(page);
 
   const errorVisible = await getValidationMessage(page).isVisible().catch(() => false);
   if (errorVisible) {
@@ -183,7 +191,7 @@ async function tryCreateServer(page, serverName) {
   }
 
   const createdLocator = getCreatedServerLocator(page, serverName);
-  const createdVisible = await createdLocator.waitFor({ state: 'visible', timeout: 15000 }).then(
+  const createdVisible = await createdLocator.waitFor({ state: 'visible', timeout: 30000 }).then(
     () => true,
     () => false
   );

@@ -229,3 +229,13 @@
 [0615/224958.307:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
 [0615/224958.385:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
 [0615/224958.386:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/231608.927:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/231609.008:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/231609.012:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/234200.638:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/234200.705:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/234200.707:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/234241.147:WARNING:services\audio\sync_reader.cc:154] ASR: No room in socket buffer.: The pipe is being closed. (0xE8)
+[0615/234254.440:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/234254.507:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/234254.512:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
