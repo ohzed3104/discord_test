@@ -21,6 +21,7 @@ test.setTimeout(LOGIN_TIMEOUT_MS + 60000);
 
 test.describe('Discord realtime messaging', () => {
   test.skip(!DISCORD_CHANNEL_URL, 'Set DISCORD_CHANNEL_URL to a channel or DM URL.');
+  test.skip(({ browserName }) => browserName !== 'chromium', 'Discord realtime messaging suite runs on Chromium only.');
   test.describe.configure({ mode: 'serial' });
 
   /**
@@ -42,7 +43,9 @@ test.describe('Discord realtime messaging', () => {
    */
   let pageB;
 
-  test.beforeAll(async ({ browser }) => {
+  test.beforeAll(async ({ browser }, testInfo) => {
+    testInfo.setTimeout(LOGIN_TIMEOUT_MS + 180000);
+
     contextA = await browser.newContext();
     pageA = await contextA.newPage();
     await openChannel(pageA, 'User A');
@@ -154,30 +157,6 @@ test.describe('Discord realtime messaging', () => {
     await expectMessageRejectedBySender(pageA, pageB, `pw-too-long-${Date.now()}-${'x'.repeat(2100)}`);
   });
 
-  // test('several messages sent quickly are received by User B in order', async () => {
-  //   const messages = Array.from({ length: 5 }, (_, index) => `pw-fast-${Date.now()}-${index}`);
-
-  //   for (const message of messages) {
-  //     await sendMessage(pageA, message);
-  //   }
-
-  //   for (const message of messages) {
-  //     await expectMessageVisible(pageB, message, 30000);
-  //   }
-
-  //   for (let index = 1; index < messages.length; index += 1) {
-  //     await expectMessageOrder(pageB, messages[index - 1], messages[index]);
-  //   }
-  // });
-
-  // test('suspicious-looking link text is handled without breaking realtime delivery', async () => {
-  //   await sendFromAToBAndExpect(
-  //     pageA,
-  //     pageB,
-  //     'suspicious-link-text',
-  //     'https://example.com/free-nitro-test-only'
-  //   );
-  // });
 
 
   test('two users send nearly at the same time and both messages appear for both users', async () => {

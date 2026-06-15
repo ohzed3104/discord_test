@@ -91,8 +91,27 @@ export async function openChannel(page, label) {
 export async function openChannelUrl(page, label, url) {
   await waitForLogin(page, label);
   await page.goto(url, { waitUntil: 'domcontentloaded' });
-  const input = await getMessageInput(page);
-  await expect(input).toBeVisible({ timeout: 20000 });
+  const noTextChannel = page.getByText(/No Text Channels|Không Có Kênh Văn Bản/i).first();
+  let input = await getMessageInput(page);
+
+  const inputVisible = await input.waitFor({ state: 'visible', timeout: 5000 }).then(
+    () => true,
+    () => false
+  );
+  if (!inputVisible && !(await noTextChannel.isVisible().catch(() => false))) {
+    const firstTextChannel = page.locator('a[href^="/channels/"]:not([href^="/channels/@me"])').first();
+    if (await firstTextChannel.isVisible().catch(() => false)) {
+      await firstTextChannel.click();
+      input = await getMessageInput(page);
+    }
+  }
+
+  await expect(input.or(noTextChannel), `${label} should open a text channel: ${url}`).toBeVisible({
+    timeout: 30000,
+  });
+  if (await noTextChannel.isVisible().catch(() => false)) {
+    throw new Error(`${label} cannot access a text channel at ${url}. Check DISCORD_CHANNEL_URL permissions.`);
+  }
   await expect(getMessageList(page)).toBeVisible({ timeout: 20000 });
 }
 
@@ -223,6 +242,7 @@ export async function openAddServerDialog(page) {
       '[aria-label="Add a Server"], [aria-label="Add Server"], [aria-label="Thêm Máy Chủ"], [data-testid="guildsnav-addguild"], [data-list-item-id="guildsnav___create-join-button"]'
     ),
     page.getByRole('button', { name: /Add a Server|Add Server|Add/i }),
+    page.getByRole('treeitem', { name: /Add a Server|Add Server|Thêm Máy Chủ|ThÃªm MÃ¡y Chá»§/i }),
     page.locator('nav[aria-label="Servers"] [role="button"]').last(),
   ];
 
@@ -246,7 +266,12 @@ export async function openAddServerDialog(page) {
     'nav[aria-label*="Server"], nav[aria-label*="Máy chủ"], nav[aria-label*="May chu"], [data-list-id="guildsnav"], [data-testid="guildsnav"]'
   );
   await expect(localizedNav.first()).toBeVisible({ timeout: 15000 });
-  const localizedButton = localizedNav.first().locator('button, [role="button"]').last();
+  const localizedButton = localizedNav
+    .first()
+    .locator(
+      '[aria-label*="Add a Server"], [aria-label*="Add Server"], [aria-label*="Thêm Máy Chủ"], [aria-label*="ThÃªm MÃ¡y Chá»§"], [role="treeitem"][aria-label*="Add"], [role="treeitem"][aria-label*="Thêm"], [role="treeitem"][aria-label*="ThÃªm"], button, [role="button"]'
+    )
+    .last();
   await expect(localizedButton).toBeVisible({ timeout: 15000 });
   await localizedButton.click();
 }

@@ -1,0 +1,332 @@
+{
+  "headers": {
+    "id": "ID",
+    "name": "Tên Test Case",
+    "steps": "Các bước thực hiện",
+    "expected": "Kết quả mong đợi"
+  },
+  "cases": [
+    {
+      "id": "TC-001",
+      "name": "Tạo server mới với thông tin hợp lệ",
+      "steps": [
+        "Đăng nhập bằng User A và mở URL kênh Discord.",
+        "Mở hộp thoại thêm server.",
+        "Chọn Create My Own / Tạo mẫu riêng.",
+        "Chọn đối tượng sử dụng server.",
+        "Nhập tên server hợp lệ theo DISCORD_SERVER_NAME kèm timestamp.",
+        "Nhấn Create / Tạo."
+      ],
+      "expected": "Server mới được tạo và tên server vừa nhập hiển thị trên giao diện."
+    },
+    {
+      "id": "TC-002",
+      "name": "Nút tạo server được bật khi tên server có một ký tự",
+      "steps": [
+        "Đăng nhập bằng User A và mở URL kênh Discord.",
+        "Mở form tạo server.",
+        "Nhập tên server là 'A'."
+      ],
+      "expected": "Nút Create / Tạo được bật."
+    },
+    {
+      "id": "TC-003",
+      "name": "Hủy luồng tạo server mà không tạo server mới",
+      "steps": [
+        "Đăng nhập bằng User A và mở URL kênh Discord.",
+        "Mở form tạo server.",
+        "Nhập một tên server duy nhất có chứa 'Cancelled'.",
+        "Đóng modal."
+      ],
+      "expected": "Modal đóng lại và tên server đã hủy không xuất hiện trên trang."
+    },
+    {
+      "id": "TC-004",
+      "name": "Tạo server với tên chứa ký tự đặc biệt",
+      "steps": [
+        "Đăng nhập bằng User A và mở URL kênh Discord.",
+        "Mở form tạo server.",
+        "Nhập tên server có ký tự đặc biệt '!@#$'.",
+        "Nhấn Create / Tạo."
+      ],
+      "expected": "Server được tạo và tên server chứa ký tự đặc biệt hiển thị trên giao diện."
+    },
+    {
+      "id": "TC-005",
+      "name": "Kiểm tra tên server rỗng",
+      "steps": [
+        "Đăng nhập bằng User A và mở URL kênh Discord.",
+        "Mở form tạo server.",
+        "Xóa toàn bộ nội dung trong ô tên server."
+      ],
+      "expected": "Nút Create / Tạo bị vô hiệu hóa."
+    },
+    {
+      "id": "TC-006",
+      "name": "Kiểm tra tên server chỉ gồm khoảng trắng",
+      "steps": [
+        "Đăng nhập bằng User A và mở URL kênh Discord.",
+        "Mở form tạo server.",
+        "Nhập chỉ các ký tự khoảng trắng vào ô tên server."
+      ],
+      "expected": "Nút Create / Tạo bị vô hiệu hóa."
+    },
+    {
+      "id": "TC-007",
+      "name": "Thay đổi tên server làm bật nút lưu thay đổi",
+      "steps": [
+        "Đăng nhập bằng User A và mở URL kênh Discord.",
+        "Mở menu ngữ cảnh của server.",
+        "Mở Server Settings > Overview.",
+        "Đổi tên server sang một tên nháp duy nhất."
+      ],
+      "expected": "Nút Save Changes / Lưu thay đổi được bật."
+    },
+    {
+      "id": "TC-008",
+      "name": "Có thể hủy thay đổi tên server",
+      "steps": [
+        "Đăng nhập bằng User A và mở URL kênh Discord.",
+        "Mở Server Settings > Overview.",
+        "Nhập một tên server nháp duy nhất.",
+        "Hủy hoặc bỏ các thay đổi."
+      ],
+      "expected": "Tên server nháp không hiển thị trên trang sau khi hủy thay đổi."
+    },
+    {
+      "id": "TC-009",
+      "name": "Mở màn hình tổng quan cài đặt server",
+      "steps": [
+        "Đăng nhập bằng User A và mở URL kênh Discord.",
+        "Mở menu ngữ cảnh của server.",
+        "Mở Server Settings > Overview."
+      ],
+      "expected": "Ô nhập tên server trong màn hình Overview hiển thị."
+    },
+    {
+      "id": "TC-010",
+      "name": "Nút lưu bị vô hiệu hóa khi chưa thay đổi cài đặt",
+      "steps": [
+        "Đăng nhập bằng User A và mở URL kênh Discord.",
+        "Mở Server Settings > Overview.",
+        "Không chỉnh sửa bất kỳ thiết lập nào."
+      ],
+      "expected": "Nút Save Changes / Lưu thay đổi bị vô hiệu hóa hoặc không hiển thị."
+    },
+    {
+      "id": "TC-011",
+      "name": "Chỉnh sửa thông tin server",
+      "steps": [
+        "Đăng nhập bằng User A và mở URL kênh Discord.",
+        "Mở Server Settings > Overview.",
+        "Đổi tên server sang một tên cập nhật duy nhất.",
+        "Nhấn Save Changes / Lưu thay đổi.",
+        "Đóng màn hình cài đặt."
+      ],
+      "expected": "Tên server mới hiển thị trên giao diện."
+    },
+    {
+      "id": "TC-012",
+      "name": "Thông tin server đã chỉnh sửa vẫn còn sau khi tải lại trang",
+      "steps": [
+        "Đăng nhập bằng User A và mở URL kênh Discord.",
+        "Mở Server Settings > Overview.",
+        "Đổi tên server sang một tên kiểm tra duy nhất.",
+        "Nhấn Save Changes / Lưu thay đổi.",
+        "Tải lại trang."
+      ],
+      "expected": "Tên server đã cập nhật vẫn hiển thị sau khi trang được tải lại."
+    },
+    {
+      "id": "TC-013",
+      "name": "Gửi tin nhắn ngắn từ User A và User B nhận được",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A gửi tin nhắn 'hello'."
+      ],
+      "expected": "Tin nhắn của User A hiển thị cho User B theo thời gian thực."
+    },
+    {
+      "id": "TC-014",
+      "name": "Gửi tin nhắn có khoảng trắng đầu và cuối",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A gửi tin nhắn có nội dung '  hello  '."
+      ],
+      "expected": "User B nhận được tin nhắn và nội dung hiển thị là 'hello'."
+    },
+    {
+      "id": "TC-015",
+      "name": "Hiển thị tin nhắn nhiều dòng cho cả hai người dùng",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A gửi tin nhắn gồm hai dòng: line1 và line2."
+      ],
+      "expected": "User A và User B đều thấy nội dung line1 và line2."
+    },
+    {
+      "id": "TC-016",
+      "name": "Hiển thị tin nhắn có dòng trống liên tiếp",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A gửi tin nhắn có nội dung 'a', một dòng trống, rồi 'b'."
+      ],
+      "expected": "User A và User B đều thấy nội dung 'a' và 'b' được render đúng."
+    },
+    {
+      "id": "TC-017",
+      "name": "Gửi tin nhắn chứa ký tự đặc biệt",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A gửi tin nhắn '!@#$%^&*()'."
+      ],
+      "expected": "Tin nhắn chứa ký tự đặc biệt được gửi và User B nhận được."
+    },
+    {
+      "id": "TC-018",
+      "name": "Gửi tin nhắn có emoji",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A gửi tin nhắn có chữ 'Hello' kèm emoji."
+      ],
+      "expected": "Tin nhắn được gửi và User B nhìn thấy nội dung 'Hello'."
+    },
+    {
+      "id": "TC-019",
+      "name": "Gửi và render tin nhắn Markdown",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A gửi tin nhắn Markdown gồm chữ đậm và đoạn code inline."
+      ],
+      "expected": "User A và User B thấy nội dung được Discord render, gồm 'bold' và 'code'."
+    },
+    {
+      "id": "TC-020",
+      "name": "Gửi văn bản giống mention role",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A gửi nội dung '@role'."
+      ],
+      "expected": "User B nhận được nội dung '@role'."
+    },
+    {
+      "id": "TC-021",
+      "name": "Gửi và render tin nhắn dạng code block",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A gửi code block JavaScript có nội dung console.log(\"test\")."
+      ],
+      "expected": "User A và User B thấy nội dung code console.log(\"test\") được hiển thị."
+    },
+    {
+      "id": "TC-022",
+      "name": "Gửi văn bản giống SQL injection như nội dung thường",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A gửi chuỗi giống SQL injection: ' OR '1'='1'; DROP TABLE messages; --."
+      ],
+      "expected": "Tin nhắn được gửi như nội dung văn bản bình thường và User B nhận được."
+    },
+    {
+      "id": "TC-023",
+      "name": "Gửi văn bản HTML injection như nội dung thường",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A gửi chuỗi '<h1>Hello</h1><script>alert(\"xss\")</script>'."
+      ],
+      "expected": "User B thấy chuỗi HTML/script như văn bản, gồm '<h1>Hello</h1>' và '<script>alert(\"xss\")</script>'."
+    },
+    {
+      "id": "TC-024",
+      "name": "Gửi payload ảnh XSS như nội dung thường",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A gửi chuỗi '<img src=x onerror=alert(1)>'."
+      ],
+      "expected": "Payload được gửi như văn bản và User B nhận được nội dung đó."
+    },
+    {
+      "id": "TC-025",
+      "name": "Gửi link Markdown javascript mà không thực thi script",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A gửi nội dung '[click me](javascript:alert(1))'."
+      ],
+      "expected": "Tin nhắn được hiển thị an toàn; User B thấy nội dung 'click me' và script không được thực thi."
+    },
+    {
+      "id": "TC-026",
+      "name": "Gửi văn bản template injection như nội dung thường",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A gửi chuỗi '{{7*7}} ${7*7} <%= 7*7 %>'."
+      ],
+      "expected": "Tin nhắn hiển thị như văn bản, không thực thi biểu thức template."
+    },
+    {
+      "id": "TC-027",
+      "name": "Gửi văn bản path traversal như nội dung thường",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A gửi chuỗi '../../etc/passwd C:\\Windows\\System32'."
+      ],
+      "expected": "Tin nhắn được gửi như văn bản bình thường và User B nhận được."
+    },
+    {
+      "id": "TC-028",
+      "name": "Không gửi tin nhắn rỗng",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A thử gửi tin nhắn rỗng."
+      ],
+      "expected": "Tin nhắn rỗng không được gửi và User B không nhận thêm tin nhắn."
+    },
+    {
+      "id": "TC-029",
+      "name": "Không gửi tin nhắn chỉ gồm khoảng trắng",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A thử gửi tin nhắn chỉ gồm khoảng trắng."
+      ],
+      "expected": "Tin nhắn chỉ gồm khoảng trắng không được gửi và User B không nhận thêm tin nhắn."
+    },
+    {
+      "id": "TC-030",
+      "name": "Không gửi tin nhắn chỉ gồm ký tự xuống dòng",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A thử gửi tin nhắn chỉ gồm các ký tự xuống dòng."
+      ],
+      "expected": "Tin nhắn chỉ gồm xuống dòng không được gửi và User B không nhận thêm tin nhắn."
+    },
+    {
+      "id": "TC-031",
+      "name": "Không gửi tin nhắn vượt quá giới hạn ký tự của Discord",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A thử gửi tin nhắn dài hơn giới hạn ký tự của Discord."
+      ],
+      "expected": "Tin nhắn bị phía gửi từ chối và User B không nhận được tin nhắn đó."
+    },
+    {
+      "id": "TC-032",
+      "name": "Hai người dùng gửi gần như đồng thời và cả hai tin nhắn đều hiển thị cho cả hai",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User A gửi một tin nhắn duy nhất.",
+        "User B đồng thời gửi một tin nhắn duy nhất."
+      ],
+      "expected": "Cả User A và User B đều thấy cả hai tin nhắn."
+    },
+    {
+      "id": "TC-033",
+      "name": "User B vẫn nhận tin nhắn sau khi tải lại trang",
+      "steps": [
+        "Mở cùng một kênh Discord bằng User A và User B.",
+        "User B tải lại trang và đợi danh sách tin nhắn hiển thị.",
+        "User A gửi tin nhắn 'message after B refresh'."
+      ],
+      "expected": "User B nhận được tin nhắn mới sau khi tải lại trang."
+    }
+  ]
+}

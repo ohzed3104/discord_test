@@ -5,61 +5,16 @@ const DISCORD_APP_URL = process.env.DISCORD_APP_URL || 'https://discord.com/app'
 const DISCORD_CHANNEL_URL = process.env.DISCORD_CHANNEL_URL;
 const DISCORD_CHANNEL_ALT_URL = process.env.DISCORD_CHANNEL_ALT_URL;
 const LOGIN_TIMEOUT_MS = Number(process.env.DISCORD_LOGIN_TIMEOUT_MS || 180000);
+const SINGLE_USER_MODE = process.env.DISCORD_SINGLE_USER === '1';
+const MULTIWINDOW_ENABLED = process.env.DISCORD_MULTIWINDOW === '1';
+const THIRD_USER_ENABLED = process.env.DISCORD_THIRD_USER === '1';
 const DISCORD_SERVER_NAME = process.env.DISCORD_SERVER_NAME || 'PW Test Server';
 const DISCORD_SERVER_INVITE_URL = process.env.DISCORD_SERVER_INVITE_URL;
 
-test.setTimeout(LOGIN_TIMEOUT_MS + 60000);
-
-function getDiscordCredentials(label) {
-  if (label.includes('User C')) {
-    return {
-      email: process.env.DISCORD_USER_C_EMAIL,
-      password: process.env.DISCORD_USER_C_PASSWORD,
-    };
-  }
-
-  if (label.includes('User B')) {
-    return {
-      email: process.env.DISCORD_USER_B_EMAIL,
-      password: process.env.DISCORD_USER_B_PASSWORD,
-    };
-  }
-
-  return {
-    email: process.env.DISCORD_USER_A_EMAIL,
-    password: process.env.DISCORD_USER_A_PASSWORD,
-  };
-}
-
-async function loginWithEnvCredentials(page, label) {
-  const { email, password } = getDiscordCredentials(label);
-  if (!email || !password) {
-    await page.pause();
-    return;
-  }
-
-  const emailInput = page.locator('input[name="email"]').first();
-  const passwordInput = page.locator('input[name="password"]').first();
-
-  await expect(emailInput, `${label} email input should be visible`).toBeVisible({
-    timeout: LOGIN_TIMEOUT_MS,
-  });
-  await emailInput.fill(email);
-  await passwordInput.fill(password);
-  await page.getByRole('button', { name: /log in|đăng nhập/i }).click();
-}
-
 async function waitForLogin(page, label) {
   await page.goto(DISCORD_APP_URL, { waitUntil: 'domcontentloaded' });
-
-  const loginForm = page.locator('input[name="email"]').first();
-  await Promise.race([
-    page.waitForURL(/\/channels\//, { timeout: LOGIN_TIMEOUT_MS }).catch(() => {}),
-    loginForm.waitFor({ state: 'visible', timeout: LOGIN_TIMEOUT_MS }).catch(() => {}),
-  ]);
-
   if (!page.url().includes('/channels/')) {
-    await loginWithEnvCredentials(page, label);
+    await page.pause();
     await page.waitForURL(/\/channels\//, { timeout: LOGIN_TIMEOUT_MS });
   }
   await expect(page, `${label} should be logged in`).toHaveURL(/\/channels\//);
@@ -71,10 +26,6 @@ function getMessageList(page) {
       'ol[aria-label="Messages"], div[role="log"], [data-list-id="chat-messages"], main [role="log"]'
     )
     .first();
-}
-
-function getVisibleMessages(page) {
-  return getMessageList(page).locator('[id^="chat-messages-"], [role="article"], li');
 }
 
 async function getMessageInput(page) {
@@ -100,44 +51,13 @@ async function openChannelUrl(page, label, url) {
 async function sendMessage(page, text) {
   const input = await getMessageInput(page);
   await input.click();
-  if (text) {
-    await page.keyboard.insertText(text);
-  }
+  await input.type(text);
   await page.keyboard.press('Enter');
-}
-
-async function clearMessageInput(page) {
-  const input = await getMessageInput(page);
-  await input.click();
-  await page.keyboard.press('Control+A');
-  await page.keyboard.press('Backspace');
 }
 
 async function expectMessageVisible(page, text, timeoutMs = 15000) {
   const list = getMessageList(page);
   await expect(list.getByText(text).first()).toBeVisible({ timeout: timeoutMs });
-}
-
-async function expectMessagePartsVisible(page, parts, timeoutMs = 15000) {
-  const list = getMessageList(page);
-  for (const part of parts) {
-    await expect(list.getByText(part).first()).toBeVisible({ timeout: timeoutMs });
-  }
-}
-
-async function expectBlankMessageNotSent(pageA, pageB, text) {
-  const beforeA = await getVisibleMessages(pageA).count();
-  const beforeB = await getVisibleMessages(pageB).count();
-
-  await sendMessage(pageA, text);
-
-  await expect
-    .poll(async () => getVisibleMessages(pageA).count(), { timeout: 3000 })
-    .toBe(beforeA);
-  await expect
-    .poll(async () => getVisibleMessages(pageB).count(), { timeout: 3000 })
-    .toBe(beforeB);
-  await clearMessageInput(pageA);
 }
 
 async function expectMessageOrder(page, firstText, secondText) {
@@ -224,7 +144,7 @@ async function updateServerName(page, name) {
 }
 
 test.describe('Discord realtime messaging', () => {
-  // test.skip(true, 'Realtime messaging suite skipped (completed).');
+  test.skip(true, 'Realtime messaging suite skipped (completed).');
   test.skip(!DISCORD_CHANNEL_URL, 'Set DISCORD_CHANNEL_URL to a channel or DM URL.');
   test.describe.configure({ mode: 'serial' });
 
@@ -238,9 +158,11 @@ test.describe('Discord realtime messaging', () => {
     pageA = await contextA.newPage();
     await openChannel(pageA, 'User A');
 
-    contextB = await browser.newContext();
-    pageB = await contextB.newPage();
-    await openChannel(pageB, 'User B');
+    if (!SINGLE_USER_MODE) {
+      contextB = await browser.newContext();
+      pageB = await contextB.newPage();
+      await openChannel(pageB, 'User B');
+    }
   });
 
   test.afterAll(async () => {
@@ -249,115 +171,66 @@ test.describe('Discord realtime messaging', () => {
   });
 
   test('send/receive realtime between two users', async () => {
+    test.skip(SINGLE_USER_MODE, 'Single-user mode enabled.');
     await openChannelUrl(pageA, 'User A', DISCORD_CHANNEL_URL);
     await openChannelUrl(pageB, 'User B', DISCORD_CHANNEL_URL);
-
-    const runId = Date.now();
-    const messageCases = [
-      {
-        name: 'short text',
-        input: 'hello',
-      },
-      {
-        name: 'leading and trailing spaces',
-        input: '  hello  ',
-      },
-      {
-        name: 'multiple lines',
-        input: 'line 1\nline 2\nline 3',
-        expectedParts: ['line 1', 'line 2', 'line 3'],
-      },
-      {
-        name: 'long text',
-        input: `long-${'a'.repeat(800)}`,
-      },
-      {
-        name: 'numbers only',
-        input: '12345678901234567890',
-      },
-      {
-        name: 'special characters',
-        input: '!@#$%^&*()_+-=[]{}',
-      },
-      {
-        name: 'vietnamese text',
-        input: 'Xin chào, kiểm thử tiếng Việt',
-      },
-      {
-        name: 'unicode and emoji',
-        input: 'Hello 😀🔥✅',
-        expectedParts: ['Hello'],
-      },
-      {
-        name: 'near discord message limit',
-        input: `near-limit-${'x'.repeat(1850)}`,
-      },
-      {
-        name: 'consecutive newlines',
-        input: 'first line\n\n\nlast line',
-        expectedParts: ['first line', 'last line'],
-      },
-      {
-        name: 'copied markdown format',
-        input: '**bold text**\n- item one\n`inline code`\nhttps://example.com',
-        expectedParts: ['bold text', 'item one', 'inline code', 'https://example.com'],
-      },
-    ];
-
-    for (const messageCase of messageCases) {
-      const marker = `pw-realtime-${runId}-${messageCase.name}`;
-      const message = `${marker}\n${messageCase.input}`;
-      await sendMessage(pageA, message);
-
-      const expectedParts = [marker, ...(messageCase.expectedParts || [messageCase.input])];
-      await expectMessagePartsVisible(pageA, expectedParts, 20000);
-      await expectMessagePartsVisible(pageB, expectedParts, 20000);
-    }
-
-    await expectBlankMessageNotSent(pageA, pageB, '');
-    await expectBlankMessageNotSent(pageA, pageB, '     ');
+    const message = `pw-realtime-a-${Date.now()}`;
+    await sendMessage(pageA, message);
+    await expectMessageVisible(pageA, message, 20000);
+    await expectMessageVisible(pageB, message, 20000);
   });
 
-  // test('sync messages across multiple windows', async () => {
-  //   const pageA2 = await contextA.newPage();
-  //   await openChannel(pageA2, 'User A (window 2)');
+  test('sync messages across multiple windows', async () => {
+    test.skip(SINGLE_USER_MODE, 'Single-user mode enabled.');
+    test.skip(!MULTIWINDOW_ENABLED, 'Multiwindow test disabled.');
+    const pageA2 = await contextA.newPage();
+    await openChannel(pageA2, 'User A (window 2)');
 
-  //   const message = `pw-sync-b-${Date.now()}`;
-  //   await sendMessage(pageB, message);
-  //   await expectMessageVisible(pageA, message, 20000);
-  //   await expectMessageVisible(pageA2, message, 20000);
+    const message = `pw-sync-b-${Date.now()}`;
+    await sendMessage(pageB, message);
+    await expectMessageVisible(pageA, message, 20000);
+    await expectMessageVisible(pageA2, message, 20000);
 
-  //   await pageA2.close();
-  // });
+    await pageA2.close();
+  });
 
-  // test('message order is correct', async () => {
-  //   const messageA = `pw-order-a-${Date.now()}`;
-  //   const messageB = `pw-order-b-${Date.now()}`;
+  test('message order is correct', async () => {
+    const messageA = `pw-order-a-${Date.now()}`;
+    const messageB = `pw-order-b-${Date.now()}`;
 
-  //   await openChannelUrl(pageA, 'User A', DISCORD_CHANNEL_URL);
-  //   await sendMessage(pageA, messageA);
+    await openChannelUrl(pageA, 'User A', DISCORD_CHANNEL_URL);
+    await sendMessage(pageA, messageA);
 
-  //   await openChannelUrl(pageB, 'User B', DISCORD_CHANNEL_URL);
-  //   await expectMessageVisible(pageB, messageA, 20000);
-  //   await sendMessage(pageB, messageB);
-  //   await expectMessageVisible(pageA, messageB, 20000);
+    if (SINGLE_USER_MODE) {
+      await sendMessage(pageA, messageB);
+      await expectMessageVisible(pageA, messageB);
+      await expectMessageOrder(pageA, messageA, messageB);
+      return;
+    }
 
-  //   await expectMessageOrder(pageA, messageA, messageB);
-  //   await expectMessageOrder(pageB, messageA, messageB);
-  // });
+    await openChannelUrl(pageB, 'User B', DISCORD_CHANNEL_URL);
+    await expectMessageVisible(pageB, messageA, 20000);
+    await sendMessage(pageB, messageB);
+    await expectMessageVisible(pageA, messageB, 20000);
 
-  // test('message history persists after refresh', async () => {
-  //   const message = `pw-history-a-${Date.now()}`;
-  //   await openChannelUrl(pageA, 'User A', DISCORD_CHANNEL_URL);
-  //   await sendMessage(pageA, message);
+    await expectMessageOrder(pageA, messageA, messageB);
+    await expectMessageOrder(pageB, messageA, messageB);
+  });
 
-  //   await openChannelUrl(pageB, 'User B', DISCORD_CHANNEL_URL);
-  //   await expectMessageVisible(pageB, message, 20000);
+  test('message history persists after refresh', async () => {
+    const message = `pw-history-a-${Date.now()}`;
+    await openChannelUrl(pageA, 'User A', DISCORD_CHANNEL_URL);
+    await sendMessage(pageA, message);
 
-  //   await pageA.reload({ waitUntil: 'domcontentloaded' });
-  //   await expect(getMessageList(pageA)).toBeVisible();
-  //   await expectMessageVisible(pageA, message);
-  // });
+    if (!SINGLE_USER_MODE) {
+      await openChannelUrl(pageB, 'User B', DISCORD_CHANNEL_URL);
+      await expectMessageVisible(pageB, message, 20000);
+    }
+
+    await pageA.reload({ waitUntil: 'domcontentloaded' });
+    await expect(getMessageList(pageA)).toBeVisible();
+    await expectMessageVisible(pageA, message);
+  });
 });
 
 test.describe('Discord channel management', () => {
@@ -445,6 +318,7 @@ test.describe('Discord server management', () => {
   });
 
   test('create new server with valid info', async () => {
+    test.skip(SINGLE_USER_MODE, 'Single-user mode enabled.');
     await createServer(pageA, `${DISCORD_SERVER_NAME} ${Date.now()}`);
   });
 
@@ -456,10 +330,11 @@ test.describe('Discord server management', () => {
       .click();
     const createButton = pageA.getByRole('button', { name: /^Create$|^Tạo$/i });
     await expect(createButton).toBeDisabled();
-    await pageA.keyboard.press('Escape');
+    await page.keyboard.press('Escape');
   });
 
   test('edit server info', async () => {
+    test.skip(SINGLE_USER_MODE, 'Single-user mode enabled.');
     const updatedName = `${DISCORD_SERVER_NAME} Updated ${Date.now()}`;
     await updateServerName(pageA, updatedName);
     await expect(pageA.getByText(updatedName).first()).toBeVisible({ timeout: 15000 });

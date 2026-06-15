@@ -29,3 +29,194 @@
 [0614/004719.187:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
 [0614/004719.220:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
 [0614/004719.221:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231258.561:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231258.675:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231258.675:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231306.209:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231306.249:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231306.249:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231414.227:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231414.286:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231414.286:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231421.038:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231421.070:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231421.070:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231717.375:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231717.436:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231717.436:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231723.933:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231723.966:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231723.967:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231759.101:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231759.156:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231759.156:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231805.381:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231805.424:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/231805.424:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232457.159:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232457.225:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232457.226:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232506.462:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232506.520:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232506.521:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232646.717:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232646.777:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232646.778:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232653.445:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232653.480:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232653.480:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232814.971:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232815.036:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232815.036:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232822.028:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232822.062:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/232822.069:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/233524.189:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/233524.241:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/233524.242:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/233530.978:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/233531.014:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/233531.014:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234231.644:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234231.706:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234231.707:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234238.266:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234238.315:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234238.315:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234322.838:ERROR:gpu\command_buffer\service\gl_utils.cc:430] [.WebGL-0x2e9c00420e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0614/234323.019:ERROR:gpu\ipc\service\gles2_command_buffer_stub.cc:109] ContextResult::kFatalFailure: fail_if_major_perf_caveat + software gl
+[0614/234435.501:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234435.559:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234435.561:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234441.877:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234441.907:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234441.909:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234617.595:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234617.661:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234617.662:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234624.896:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234624.928:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234624.929:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234740.950:ERROR:gpu\command_buffer\service\gl_utils.cc:430] [.WebGL-0x223412c56600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0614/234741.095:ERROR:gpu\ipc\service\gles2_command_buffer_stub.cc:109] ContextResult::kFatalFailure: fail_if_major_perf_caveat + software gl
+[0614/234812.194:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234812.270:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234812.272:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234818.867:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234818.912:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234818.912:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/234935.382:ERROR:gpu\command_buffer\service\gl_utils.cc:430] [.WebGL-0x53940b2cd000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0614/234935.529:ERROR:gpu\ipc\service\gles2_command_buffer_stub.cc:109] ContextResult::kFatalFailure: fail_if_major_perf_caveat + software gl
+[0614/234945.778:ERROR:gpu\command_buffer\service\gl_utils.cc:430] [.WebGL-0x539400423800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0614/234945.811:ERROR:gpu\ipc\service\gles2_command_buffer_stub.cc:109] ContextResult::kFatalFailure: fail_if_major_perf_caveat + software gl
+[0614/235032.298:WARNING:services\audio\sync_reader.cc:154] ASR: No room in socket buffer.: The pipe is being closed. (0xE8)
+[0614/235035.575:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235035.651:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235035.651:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235038.339:WARNING:services\audio\sync_reader.cc:154] ASR: No room in socket buffer.: The pipe is being closed. (0xE8)
+[0614/235043.053:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235043.092:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235043.092:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235159.320:ERROR:gpu\command_buffer\service\gl_utils.cc:430] [.WebGL-0x758400409a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0614/235159.455:ERROR:gpu\ipc\service\gles2_command_buffer_stub.cc:109] ContextResult::kFatalFailure: fail_if_major_perf_caveat + software gl
+[0614/235210.430:ERROR:gpu\command_buffer\service\gl_utils.cc:430] [.WebGL-0x758401021e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0614/235210.462:ERROR:gpu\ipc\service\gles2_command_buffer_stub.cc:109] ContextResult::kFatalFailure: fail_if_major_perf_caveat + software gl
+[0614/235239.488:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235239.565:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235239.565:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235243.304:WARNING:services\audio\sync_reader.cc:154] ASR: No room in socket buffer.: The pipe is being closed. (0xE8)
+[0614/235247.817:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235247.858:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235247.859:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235335.032:ERROR:gpu\command_buffer\service\gl_utils.cc:430] [.WebGL-0x67c40b182e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0614/235335.167:ERROR:gpu\ipc\service\gles2_command_buffer_stub.cc:109] ContextResult::kFatalFailure: fail_if_major_perf_caveat + software gl
+[0614/235346.126:ERROR:gpu\command_buffer\service\gl_utils.cc:430] [.WebGL-0x67c40b179200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0614/235346.154:ERROR:gpu\ipc\service\gles2_command_buffer_stub.cc:109] ContextResult::kFatalFailure: fail_if_major_perf_caveat + software gl
+[0614/235416.275:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235416.330:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235416.332:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235423.626:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235423.662:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235423.662:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0614/235540.171:ERROR:gpu\command_buffer\service\gl_utils.cc:430] [.WebGL-0x767400409a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0614/235540.302:ERROR:gpu\ipc\service\gles2_command_buffer_stub.cc:109] ContextResult::kFatalFailure: fail_if_major_perf_caveat + software gl
+[0614/235550.451:ERROR:gpu\command_buffer\service\gl_utils.cc:430] [.WebGL-0x767413cfc000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0614/235550.480:ERROR:gpu\ipc\service\gles2_command_buffer_stub.cc:109] ContextResult::kFatalFailure: fail_if_major_perf_caveat + software gl
+[0615/000422.006:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/000422.100:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/000422.100:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/000429.072:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/000429.189:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/000429.189:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/000513.595:ERROR:gpu\ipc\service\gles2_command_buffer_stub.cc:109] ContextResult::kFatalFailure: fail_if_major_perf_caveat + software gl
+[0615/000513.665:ERROR:gpu\command_buffer\service\gl_utils.cc:430] [.WebGL-0x589400d56800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0615/000625.278:ERROR:gpu\ipc\service\gles2_command_buffer_stub.cc:109] ContextResult::kFatalFailure: fail_if_major_perf_caveat + software gl
+[0615/000625.310:ERROR:gpu\command_buffer\service\gl_utils.cc:430] [.WebGL-0x589400d54400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[0615/101035.372:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/101035.450:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/101035.451:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/101132.399:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/101132.629:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/101132.629:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/101137.176:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/101137.260:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/101137.260:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/103402.084:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/103402.228:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/103402.228:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/110406.755:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/110407.168:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/110407.170:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/110416.553:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/110416.606:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/110416.607:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/111046.076:ERROR:gpu\command_buffer\service\shared_image\shared_image_manager.cc:386] SharedImageManager::ProduceMemory: Trying to Produce a Memory representation from a non-existent mailbox.
+[0615/111048.011:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/111048.087:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/111048.088:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/114059.883:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/114100.202:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/114100.204:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/114108.466:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/114108.548:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/114108.554:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/114129.873:WARNING:net\dns\dns_config_service_win.cc:609] Failed to read DnsConfig.
+[0615/114243.311:WARNING:net\dns\dns_config_service_win.cc:609] Failed to read DnsConfig.
+[0615/114248.350:WARNING:net\dns\dns_config_service_win.cc:609] Failed to read DnsConfig.
+[0615/114447.122:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/114447.469:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/114447.469:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/114452.636:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/114452.837:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/114452.839:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/114504.188:WARNING:net\dns\dns_config_service_win.cc:609] Failed to read DnsConfig.
+[0615/114509.251:WARNING:net\dns\dns_config_service_win.cc:609] Failed to read DnsConfig.
+[0615/114519.283:WARNING:net\dns\dns_config_service_win.cc:609] Failed to read DnsConfig.
+[0615/114539.312:WARNING:net\dns\dns_config_service_win.cc:609] Failed to read DnsConfig.
+[0615/151159.706:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/151159.758:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/151159.758:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/162819.343:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/162819.379:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/162819.383:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/162824.243:WARNING:net\spdy\spdy_session.cc:3142] Received HEADERS for invalid stream 1
+[0615/162824.243:WARNING:net\spdy\spdy_session.cc:3142] Received HEADERS for invalid stream 3
+[0615/162824.244:WARNING:net\spdy\spdy_session.cc:3142] Received HEADERS for invalid stream 5
+[0615/162848.512:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/162848.558:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/162848.559:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/162913.465:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/162913.506:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/162913.506:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/163013.194:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/163013.242:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/163013.243:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/163021.630:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/163021.691:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/163021.691:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/163148.170:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/163148.220:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/163148.223:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/163155.325:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/163155.389:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
+[0615/163155.390:WARNING:net\http\http_cache_transaction.cc:2642] Empty validation header value found
