@@ -453,31 +453,31 @@ test.describe('Discord server management v2', () => {
     }
   });
 
-  test('SV01 - Tạo server với tên hợp lệ', async () => {
+  test('Tạo server với tên hợp lệ', async () => {
     const name = await trackServer(serverName('SV01 Valid'));
     await createServer(pageOwner, name);
     await expect(getServerByName(pageOwner, name)).toBeVisible({ timeout: 20000 });
   });
 
-  test('SV02 - Tạo server với tên rỗng', async () => {
+  test('Tạo server với tên rỗng', async () => {
     const result = await tryCreateServer(pageOwner, '');
     expect(result.created, `Empty server name should be rejected, got ${result.reason}`).toBeFalsy();
     await closeDialog(pageOwner);
   });
 
-  test('SV03 - Tạo server với tên tiếng Việt', async () => {
+  test('Tạo server với tên tiếng Việt', async () => {
     const name = await trackServer(serverName('Tiếng Việt Đầy Đủ Dấu'));
     await createServer(pageOwner, name);
     await expect(pageOwner.getByText(name).first()).toBeVisible({ timeout: 20000 });
   });
 
-  // test('SV04 - Tạo server với tên chứa ký tự đặc biệt', async () => {
+  // test('Tạo server với ký tự đặc biệt', async () => {
   //   const name = await trackServer(serverName('Special !@#$%^&()_+-=[]{};,.'));
   //   await createServer(pageOwner, name);
   //   await expect(getCreatedServerLocator(pageOwner, name)).toBeVisible({ timeout: 20000 });
   // });
 
-  test('SV05 - Tạo server với tên rất dài', async () => {
+  test('Tạo server với tên quá dài', async () => {
     const name = `${serverName('Long')} ${'A'.repeat(LONG_NAME_LENGTH)}`;
     const result = await tryCreateServer(pageOwner, name);
 
@@ -490,7 +490,7 @@ test.describe('Discord server management v2', () => {
     }
   });
 
-  test('SV06 - Đổi tên server hợp lệ', async () => {
+  test('Đổi tên server hợp lệ', async () => {
     const originalName = await trackServer(serverName('SV06 Original'));
     const updatedName = serverName('SV06 Updated');
     await createServer(pageOwner, originalName);
@@ -500,7 +500,7 @@ test.describe('Discord server management v2', () => {
     await expect(getServerByName(pageOwner, updatedName)).toBeVisible({ timeout: 20000 });
   });
 
-  test('SV07 - Đổi tên server thành rỗng', async () => {
+  test('Đổi tên server thành rỗng', async () => {
     const name = await trackServer(serverName('SV07 Original'));
     await createServer(pageOwner, name);
 
@@ -509,7 +509,7 @@ test.describe('Discord server management v2', () => {
     await expect(getServerByName(pageOwner, name)).toBeVisible({ timeout: 20000 });
   });
 
-  test('SV07.1 - Đổi tên server thành toàn khoảng trắng', async () => {
+  test('Đổi tên server thành khoảng trắng', async () => {
     const name = await trackServer(serverName('SV07 Spaces Original'));
     await createServer(pageOwner, name);
 
@@ -518,7 +518,7 @@ test.describe('Discord server management v2', () => {
     await expect(getServerByName(pageOwner, name)).toBeVisible({ timeout: 20000 });
   });
 
-  test('SV08 - Đổi tên server thành tên tiếng Việt', async () => {
+  test('Đổi tên server sang tiếng Việt', async () => {
     const originalName = await trackServer(serverName('SV08 Original'));
     const updatedName = serverName('Đổi tên tiếng Việt đầy đủ dấu');
     await createServer(pageOwner, originalName);
@@ -528,7 +528,7 @@ test.describe('Discord server management v2', () => {
     await expect(pageOwner.getByText(updatedName).first()).toBeVisible({ timeout: 20000 });
   });
 
-  test('SV09 - Đổi tên server chứa ký tự đặc biệt', async () => {
+  test('Đổi tên server với ký tự đặc biệt', async () => {
     const originalName = await trackServer(serverName('SV09 Original'));
     const updatedName = serverName('Rename !@#$%^&()_+-=[]{};,.');
     await createServer(pageOwner, originalName);
@@ -538,7 +538,7 @@ test.describe('Discord server management v2', () => {
     await expect(pageOwner.getByText(updatedName).first()).toBeVisible({ timeout: 20000 });
   });
 
-  test('SV10 - Đổi tên server rất dài', async () => {
+  test('Đổi tên server quá dài', async () => {
     const name = await trackServer(serverName('SV10 Original'));
     const longName = `${serverName('Rename Long')} ${'B'.repeat(LONG_NAME_LENGTH)}`;
     await createServer(pageOwner, name);
@@ -548,7 +548,7 @@ test.describe('Discord server management v2', () => {
     await expect(getServerByName(pageOwner, name)).toBeVisible({ timeout: 20000 });
   });
 
-  test('SV11 - Xóa server thành công', async () => {
+  test('Xóa server thành công', async () => {
     const name = await trackServer(serverName('SV11 Delete'));
     await createServer(pageOwner, name);
     await deleteServer(pageOwner, name);
@@ -556,7 +556,7 @@ test.describe('Discord server management v2', () => {
     await expect(getServerByName(pageOwner, name)).toHaveCount(0);
   });
 
-  test('SV13 - Xóa server rồi kiểm tra truy cập lại', async () => {
+  test('Truy cập server sau khi xóa', async () => {
     const name = await trackServer(serverName('SV13 Access After Delete'));
     await createServer(pageOwner, name);
     const deletedServerUrl = pageOwner.url();
@@ -571,7 +571,7 @@ test.describe('Discord server management v2', () => {
     await expect(pageOwner).not.toHaveURL(deletedServerUrl);
   });
 
-  test('SV14 - Tạo server trùng tên', async () => {
+  test('Tạo server trùng tên', async () => {
     const name = await trackServer(serverName('SV14 Duplicate'));
     await createServer(pageOwner, name);
     const beforeCount = await getServersByName(pageOwner, name).count();
